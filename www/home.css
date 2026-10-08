@@ -1,0 +1,197 @@
+/* ---------- Gameboy Zone home screen (shared) ----------
+   Apps set these tokens: --h-bg, --h-bg-glow, --h-text, --h-muted, --h-panel,
+   --h-panel-text, --h-shape, --h-accent, --h-ink, --h-line */
+
+.home {
+  position: relative; isolation: isolate; min-height: 100%;
+  color: var(--h-text);
+  padding: 1.25rem max(1rem, env(safe-area-inset-right, 0px)) 2rem max(1rem, env(safe-area-inset-left, 0px));
+}
+
+/* Animated background */
+.home-bg {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  background: radial-gradient(110% 80% at 80% 0%, var(--h-bg-glow) 0%, transparent 60%), var(--h-bg);
+}
+.bg-shape {
+  position: absolute; fill: none; stroke: var(--h-shape); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round;
+  animation-name: bg-drift; animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: alternate;
+  will-change: transform;
+}
+@keyframes bg-drift {
+  from { transform: translate(0, 0) rotate(var(--r0)); }
+  to { transform: translate(var(--dx), var(--dy)) rotate(var(--r1)); }
+}
+
+/* Layout: library left, brand + menu right (stacked on narrow screens) */
+.home-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem;
+  max-width: 82rem; margin: 0 auto;
+}
+.home-side { display: flex; flex-direction: column; gap: 1rem; order: -1; }
+@media (min-width: 46rem) {
+  .home-grid { grid-template-columns: minmax(0, 1fr) minmax(12.5rem, 16rem); align-items: start; gap: 1.5rem; }
+  .home-side { order: 0; position: sticky; top: 1rem; }
+  .home-menu button, .home-menu a { min-height: 2.9rem; font-size: 1.1rem; }
+}
+@media (min-width: 64rem) {
+  .home-grid { grid-template-columns: minmax(0, 1fr) minmax(15rem, 23rem); gap: 2rem; }
+  .home-menu button, .home-menu a { min-height: 3.4rem; font-size: 1.3rem; }
+}
+
+/* Brand */
+.home-brand { display: flex; align-items: flex-end; gap: 0.6rem; flex-wrap: wrap; }
+.home-brand .wordmark { margin: 0; }
+.home-version { font-size: 0.85rem; font-weight: 600; color: var(--h-muted); padding-bottom: 0.25rem; }
+
+/* Menu panel */
+.home-menu {
+  display: flex; flex-direction: column; margin: 0; padding: 0.35rem; list-style: none;
+  border-radius: 0.9rem; background: var(--h-panel); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.home-menu button, .home-menu a {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; width: 100%;
+  min-height: 3.4rem; padding: 0.5rem 1rem; border: 0; border-radius: 0.6rem; cursor: pointer; text-align: left; text-decoration: none;
+  font: inherit; font-size: 1.3rem; font-weight: 700; font-variation-settings: "wdth" 92; color: var(--h-panel-text); background: transparent;
+}
+.home-menu button:hover, .home-menu a:hover { background: rgba(127, 110, 180, 0.18); }
+.home-menu .menu-icon { font-size: 1.1rem; opacity: 0.7; }
+/* Upright phones: menu becomes a compact 2x2 grid */
+@media (max-width: 45.99rem) {
+  .home-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; }
+  .home-menu button, .home-menu a { min-height: 2.9rem; font-size: 1.05rem; padding: 0.4rem 0.8rem; white-space: nowrap; }
+  .home-menu .menu-icon { display: none; }
+  .home-menu > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+
+/* Tabs */
+.lib-tabs {
+  display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+  border-bottom: 3px solid var(--h-accent);
+}
+.lib-tabs::-webkit-scrollbar { display: none; }
+.lib-tab {
+  flex: none; min-height: 3rem; padding: 0.55rem 1.1rem; border: 0; border-radius: 0.5rem 0.5rem 0 0; cursor: pointer;
+  font: inherit; font-size: 1.2rem; font-weight: 700; font-variation-settings: "wdth" 92;
+  color: var(--h-text); background: var(--h-panel);
+}
+.lib-tab + .lib-tab { margin-left: 2px; }
+.lib-tab[aria-selected="true"] { color: var(--h-ink); background: var(--h-accent); }
+
+.lib-notes { display: flex; flex-direction: column; gap: 0.75rem; }
+.lib-notes:empty { display: none; }
+
+/* Tile grid */
+.tiles {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 1rem 0.75rem;
+  padding-top: 1.1rem;
+}
+.tile { position: relative; }
+@media (min-width: 46rem) { .tiles { grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); gap: 1.1rem 0.9rem; } }
+@media (min-width: 64rem) { .tiles { grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); gap: 1.4rem 1.1rem; } }
+.tile-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem; width: 100%; padding: 0.4rem 0.2rem 0.3rem;
+  border: 0; border-radius: 0.8rem; cursor: pointer; font: inherit; color: var(--h-text); background: transparent;
+  -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+}
+.tile-btn:hover .tile-art, .tile-btn:focus-visible .tile-art { transform: translateY(-4px); }
+.tile-btn:active .tile-art { transform: translateY(1px); }
+.tile-art {
+  width: 100%; aspect-ratio: 1; display: grid; place-items: center;
+  filter: drop-shadow(0 6px 8px rgba(10, 6, 24, 0.35)); transition: transform 150ms ease-out;
+}
+.tile-btn.loading .tile-art { opacity: 0.6; transform: scale(0.97); }
+.tile-caption { font-size: 0.78rem; font-weight: 600; color: var(--h-muted); text-align: center; line-height: 1.25; }
+
+/* Cartridges drawn in CSS: tall for GB/GBC, wide for GBA */
+.cart { position: relative; display: flex; flex-direction: column; gap: 6%; color: #241B40; container-type: inline-size; }
+.cart.tall {
+  width: 80%; aspect-ratio: 0.88; padding: 9% 10% 12%;
+  clip-path: polygon(0 0, 84% 0, 100% 13%, 100% 100%, 0 100%); border-radius: 6px 0 6px 6px;
+}
+.cart.wide { width: 98%; aspect-ratio: 1.62; padding: 8% 9% 9%; border-radius: 10px 10px 5px 5px; }
+.cart.sys-gb { background: linear-gradient(180deg, #D9D4CA, #C2BDB2); }
+.cart.sys-gbc { background: linear-gradient(160deg, #9C86D8, #6F58B5); }
+.cart.sys-gba { background: linear-gradient(180deg, #5A55A0, #3E3A78); }
+.cart-ridges {
+  display: block; height: 14%; margin-right: 12%;
+  background: repeating-linear-gradient(to bottom, rgba(36, 27, 64, 0.22) 0 2px, transparent 2px 5px);
+}
+.cart-label-art {
+  flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 0.2rem;
+  padding: 0.45rem 0.5rem; border-radius: 4px; background: var(--label);
+  box-shadow: inset 0 0 0 1px rgba(36, 27, 64, 0.12);
+}
+.cart-name {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 0.72rem; font-size: max(0.6rem, 10.5cqi); font-weight: 800; font-style: italic; font-variation-settings: "wdth" 88;
+  line-height: 1.12; max-height: 3.36em; overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto;
+}
+.cart.wide .cart-name { -webkit-line-clamp: 2; max-height: 2.24em; font-size: 0.7rem; font-size: max(0.6rem, 7.6cqi); }
+.cart.wide .cart-label-art { padding: 0.35rem 0.5rem; }
+.cart-label-art { min-width: 0; }
+.cart-badge {
+  align-self: flex-start; padding: 0.05rem 0.3rem; border-radius: 3px;
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.06em; color: var(--label); background: #241B40;
+}
+
+/* Tile options */
+.tile-more {
+  position: absolute; top: 0.1rem; right: 0.1rem; width: 2rem; height: 2rem; display: grid; place-items: center;
+  border: 0; border-radius: 50%; cursor: pointer; font-size: 1.1rem; line-height: 1;
+  color: var(--h-text); background: var(--h-panel); opacity: 0; transition: opacity 120ms;
+}
+.tile:hover .tile-more, .tile-more:focus-visible { opacity: 1; }
+@media (hover: none) { .tile-more { opacity: 0.85; } }
+.tile-confirm {
+  position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
+  padding: 0.6rem; border-radius: 0.8rem; text-align: center; color: var(--h-panel-text); background: var(--h-panel-solid);
+}
+.tile-confirm p { margin: 0 0 0.2rem; font-size: 0.8rem; font-weight: 700; }
+.tile-confirm button {
+  width: 100%; min-height: 2.2rem; border: 0; border-radius: 999px; cursor: pointer; font: inherit; font-size: 0.85rem; font-weight: 700;
+}
+.tile-confirm-yes { color: #241B40; background: var(--h-accent); }
+.tile-confirm-no { color: var(--h-panel-text); background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
+
+/* Linked folder needs permission */
+.folder-note {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-top: 1rem;
+  padding: 0.8rem 1rem; border-radius: 0.8rem; background: var(--h-panel);
+}
+.folder-note p { flex: 1 1 14rem; margin: 0; font-weight: 600; }
+
+/* Settings: game folder controls (shared by both apps) */
+.source-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
+.source-question { flex-basis: 100%; margin: 0; font-size: 0.85rem; font-weight: 600; }
+.source-btn {
+  min-height: 2.5rem; padding: 0.4rem 1rem; border: 0; border-radius: 999px; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: 0.9rem; color: inherit; background: rgba(127, 110, 180, 0.22);
+}
+.source-btn.primary { color: #241B40; background: #F4C430; }
+
+/* Empty library */
+.lib-empty { grid-column: 1 / -1; padding: 1.5rem; border-radius: 0.9rem; background: var(--h-panel); }
+.lib-empty-title { margin: 0 0 0.35rem; font-size: 1.25rem; font-weight: 800; font-style: italic; font-variation-settings: "wdth" 110; }
+.lib-empty-text { margin: 0 0 1rem; max-width: 46ch; color: var(--h-muted); }
+.lib-empty-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.pill-btn {
+  min-height: 2.75rem; padding: 0.5rem 1.15rem; border: 0; border-radius: 999px; cursor: pointer;
+  font: inherit; font-weight: 700; color: var(--h-text); background: transparent; box-shadow: inset 0 0 0 2px currentColor;
+}
+.pill-btn.primary { color: #241B40; background: var(--h-accent); box-shadow: none; }
+
+.home-toast {
+  position: fixed; left: 50%; bottom: 0; z-index: 60; transform: translateX(-50%); max-width: calc(100vw - 2rem);
+  margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem); padding: 0.6rem 1.1rem; border-radius: 999px;
+  width: max-content; text-align: center; line-height: 1.35; pointer-events: none;
+  font-weight: 700; color: #F2EEFA; background: rgba(23, 16, 48, 0.92);
+}
+.home-toast.long { border-radius: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-shape { animation: none; }
+  .tile-art, .tile-more { transition: none; }
+  .tile-btn:hover .tile-art, .tile-btn:focus-visible .tile-art, .tile-btn:active .tile-art { transform: none; }
+}

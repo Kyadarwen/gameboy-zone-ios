@@ -1,0 +1,11 @@
+{
+  "appId": "com.kyadarwen.gameboyzone",
+  "appName": "Gameboy Zone",
+  "webDir": "www",
+  "backgroundColor": "#2e2350",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#2e2350",
+    "allowsLinkPreview": false
+  }
+}

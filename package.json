@@ -1,0 +1,18 @@
+{
+  "name": "gameboy-zone-ios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gameboy Zone packaged as an iPhone app (.ipa) with Capacitor.",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "engine": "bash scripts/fetch-engine.sh",
+    "sync": "cap sync ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

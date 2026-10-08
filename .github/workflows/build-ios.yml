@@ -1,0 +1,69 @@
+name: Build iPhone app
+
+# Runs on every push to main, or by hand from the Actions tab ("Run workflow").
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # lets the build publish the .ipa to the Releases page
+
+concurrency:
+  group: build-ios
+  cancel-in-progress: true
+
+jobs:
+  ipa:
+    name: Build GameboyZone.ipa
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Bundle the game engine and fonts (for offline play)
+        run: bash scripts/fetch-engine.sh
+
+      - name: Install Capacitor
+        run: npm install --no-audit --no-fund
+
+      - name: Create the iOS project
+        run: |
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Add icon, launch screen and settings
+        run: bash scripts/ios-setup.sh
+
+      - name: Build the app (unsigned)
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: bash scripts/build-ipa.sh
+
+      - name: Keep a copy on this run
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameboyZone-ipa
+          path: dist/GameboyZone.ipa
+          if-no-files-found: error
+
+      - name: Publish to Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="build-${{ github.run_number }}"
+          cat > notes.md <<'EOF'
+          **Install:** download `GameboyZone.ipa` below on your iPhone, open **SideStore**, go to **My Apps**, tap **+** and pick the file.
+
+          Unsigned build. SideStore signs it with your Apple ID; refresh it in SideStore at least every 7 days.
+          EOF
+          gh release create "$tag" dist/GameboyZone.ipa \
+            --title "Gameboy Zone (build ${{ github.run_number }})" \
+            --notes-file notes.md \
+            --latest

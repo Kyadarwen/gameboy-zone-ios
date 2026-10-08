@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gameboy Zone</title>
+  <meta name="description" content="Play Game Boy, Game Boy Color, and Game Boy Advance games in your browser. Your games and saves stay on your device.">
+  <meta name="theme-color" content="#2E2350">
+  <meta name="color-scheme" content="dark">
+
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" href="/icons/favicon-64.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GB Zone">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.emulatorjs.org" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,700..900&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/home.css">
+  <script src="/home.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main id="home" class="home">
+    <div class="home-bg" aria-hidden="true"></div>
+    <div class="home-grid">
+      <section class="home-library" aria-label="Game library">
+        <div class="lib-tabs" role="tablist" aria-label="Library">
+          <button type="button" role="tab" class="lib-tab" data-libtab="recent" aria-controls="tiles">Recent</button>
+          <button type="button" role="tab" class="lib-tab" data-libtab="games" aria-controls="tiles">Games</button>
+          <button type="button" role="tab" class="lib-tab" data-libtab="demos" aria-controls="tiles">Demos</button>
+        </div>
+        <div class="lib-notes"><p id="error" class="error" role="alert" hidden></p></div>
+        <div id="tiles" class="tiles" role="tabpanel" aria-label="Games"></div>
+      </section>
+      <aside class="home-side">
+        <div class="home-brand">
+          <h1 class="wordmark">Gameboy Zone</h1>
+          <span class="home-version">GB · GBC · GBA</span>
+        </div>
+        <nav aria-label="Main menu">
+          <div class="home-menu">
+            <button type="button" id="menu-load">Load game… <span class="menu-icon" aria-hidden="true">＋</span></button>
+            <button type="button" id="menu-folder">Link game folder <span class="menu-icon" aria-hidden="true">📁</span></button>
+            <button type="button" id="menu-demo">Try the demo <span class="menu-icon" aria-hidden="true">▶</span></button>
+            <button type="button" id="menu-settings">Settings <span class="menu-icon" aria-hidden="true">⚙</span></button>
+            <button type="button" id="menu-install" hidden>Install app <span class="menu-icon" aria-hidden="true">⤓</span></button>
+            <button type="button" id="menu-about">About <span class="menu-icon" aria-hidden="true">ⓘ</span></button>
+          </div>
+        </nav>
+      </aside>
+    </div>
+    <input type="file" id="rom-input" class="visually-hidden" tabindex="-1" aria-hidden="true">
+  </main>
+
+  <div id="settings" class="sheet-overlay" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="sheet-head">
+        <h2 id="settings-title">Settings</h2>
+        <button type="button" class="close-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="field">
+        <label for="volume">Starting volume <output id="volume-out"></output></label>
+        <input type="range" id="volume" min="0" max="100" step="5">
+        <p class="field-hint">Controls, save states, and screen options are in the emulator's own menu during play.</p>
+      </div>
+      <div class="field" id="library-sources"></div>
+      <div class="field">
+        <span class="field-label">Library</span>
+        <p class="field-hint">The library keeps a copy of each game you open on this device, for one-tap play. Clearing it doesn't touch your saves.</p>
+        <div class="field-actions" id="library-actions">
+          <button type="button" id="clear-recent">Clear Recent</button>
+          <button type="button" id="clear-all">Remove all games</button>
+        </div>
+        <div class="confirm-row" id="library-confirm" hidden>
+          <p id="library-confirm-text"></p>
+          <button type="button" class="danger" id="library-confirm-yes">Yes</button>
+          <button type="button" id="library-confirm-no">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="about" class="sheet-overlay" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="about-title">
+      <div class="sheet-head">
+        <h2 id="about-title">About</h2>
+        <button type="button" class="close-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <p>Gameboy Zone plays Game Boy, Game Boy Color, and Game Boy Advance games in your browser.</p>
+      <p>Games open from your device and are never uploaded. Saves are kept in this browser, so clearing site data erases them. The library keeps a copy of each game you open on this device, so tapping its cartridge starts it right away. In Chrome or Edge on a computer you can link a game folder; its games appear automatically. On iPhone, use Import games to add a whole folder's games at once.</p>
+      <div id="install-help" hidden>
+        <p><strong>Install on iPhone or iPad:</strong> tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>. Safari can erase saves for sites you haven't opened in 7 days; Home Screen apps are exempt.</p>
+      </div>
+      <p class="muted">Emulation by <a href="https://emulatorjs.org" target="_blank" rel="noopener">EmulatorJS</a> (GPL-3.0). Not affiliated with Nintendo.</p>
+    </div>
+  </div>
+
+  <div id="stage" class="stage" hidden>
+    <div id="game"></div>
+    <div id="stage-error" class="stage-error" hidden>
+      <p id="stage-error-text"></p>
+      <button type="button" id="back-btn" class="cta-btn">Back to games</button>
+    </div>
+  </div>
+
+  <div id="drop-overlay" class="drop-overlay" aria-hidden="true">Drop to play</div>
+</body>
+</html>

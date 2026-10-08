@@ -1,0 +1,7 @@
+node_modules/
+ios/
+dist/
+www/emulatorjs/
+www/fonts/
+.DS_Store
+__pycache__/

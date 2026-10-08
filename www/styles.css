@@ -1,0 +1,168 @@
+:root {
+  --plastic: #2E2350;      /* atomic purple shell */
+  --plastic-deep: #211938; /* shadowed plastic */
+  --cart: #EAE4D3;         /* cartridge body */
+  --ridge: #C4BCA8;        /* grip ridges */
+  --dandelion: #F4C430;    /* label + action color */
+  --ink: #241B40;          /* text on light surfaces */
+  --text: #F2EEFA;
+  --muted: #B9B0D4;
+  --danger: #FF9C8A;
+
+  --font: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-4: clamp(2.6rem, 11vw, 4.75rem);
+
+  color-scheme: dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+
+/* Flex/grid rules below must never override the hidden attribute. */
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+html { background: var(--plastic); }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--text);
+  background:
+    radial-gradient(120% 70% at 85% 0%, #3D2F6B 0%, transparent 60%) no-repeat,
+    var(--plastic);
+  -webkit-font-smoothing: antialiased;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* ---------- Home (layout, tiles, background come from home.css) ---------- */
+
+:root {
+  --h-bg: #2A2049; --h-bg-glow: #3D2F6B; --h-text: #F2EEFA; --h-muted: #B9B0D4;
+  --h-panel: rgba(18, 12, 36, 0.55); --h-panel-solid: #251C45; --h-panel-text: #F2EEFA;
+  --h-shape: rgba(242, 238, 250, 0.1); --h-accent: #F4C430; --h-ink: #241B40;
+}
+
+.wordmark {
+  margin: 0; font-size: clamp(2.1rem, 9vw, 3.3rem); font-style: italic; font-weight: 900;
+  font-stretch: 125%; font-variation-settings: "wdth" 125; line-height: 0.92; letter-spacing: -0.02em;
+  text-shadow: 0.04em 0.04em 0 var(--plastic-deep);
+}
+@media (min-width: 46rem) { .wordmark { font-size: clamp(1.6rem, 2.6vw, 2.75rem); white-space: nowrap; } }
+
+.lib-notes .error { margin-top: 1rem; }
+.error {
+  margin: 0; padding: 0.75rem 1rem; border-left: 4px solid var(--danger);
+  background: rgba(255, 156, 138, 0.1); color: var(--danger); border-radius: 0 0.4rem 0.4rem 0;
+}
+:focus-visible { outline: 3px solid var(--dandelion); outline-offset: 3px; }
+
+/* ---------- Sheets (Settings, About) ---------- */
+
+.sheet-overlay {
+  position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(10, 6, 24, 0.6);
+}
+.sheet {
+  width: min(100%, 34rem); max-height: min(90dvh, 44rem); overflow-y: auto; overscroll-behavior: contain;
+  padding: 1rem 1.1rem calc(env(safe-area-inset-bottom, 0px) + 1.25rem);
+  color: var(--text); background: #251C45; border-radius: 1.25rem 1.25rem 0 0;
+}
+@media (min-width: 42rem) and (min-height: 32rem) {
+  .sheet-overlay { align-items: center; }
+  .sheet { border-radius: 1.25rem; padding-bottom: 1.25rem; }
+}
+.sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+.sheet-head h2 { margin: 0; font-size: 1.4rem; font-style: italic; font-weight: 900; font-variation-settings: "wdth" 120; }
+.close-btn {
+  width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border: 0; border-radius: 50%; cursor: pointer;
+  font-size: 1.1rem; color: var(--text); background: #3A2D63;
+}
+.sheet p { margin: 0 0 0.8rem; }
+.sheet .muted { font-size: 0.875rem; color: var(--muted); }
+.sheet a { color: var(--text); }
+.field { padding: 0.8rem 0; border-bottom: 1px solid #3D2F6B; }
+.field:last-child { border-bottom: 0; }
+.field label, .field-label { display: flex; justify-content: space-between; font-weight: 700; }
+.field output { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.field input[type="range"] { width: 100%; margin: 0.6rem 0 0; accent-color: var(--dandelion); height: 1.75rem; }
+.field-hint { margin: 0.35rem 0 0 !important; font-size: 0.8rem; color: var(--muted); }
+.field-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+.field-actions button, .confirm-row button {
+  min-height: 2.5rem; padding: 0.4rem 1rem; border: 0; border-radius: 999px; cursor: pointer;
+  font: inherit; font-weight: 700; color: var(--text); background: #3A2D63;
+}
+.confirm-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
+.confirm-row p { flex-basis: 100%; margin: 0 !important; font-weight: 600; }
+.confirm-row .danger { color: var(--ink); background: var(--dandelion); }
+
+/* ---------- Play stage ---------- */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  /* Stop iOS double-tap zoom, text selection, and long-press menus
+     from firing while you mash buttons. */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  background: var(--plastic-deep);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+           env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+
+#game { width: 100%; height: 100%; }
+
+.stage-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  background: var(--plastic);
+}
+.stage-error p { max-width: 32ch; margin: 0; font-size: var(--step-1); }
+.stage-error .cta-btn { background: var(--dandelion); color: var(--ink); }
+
+/* ---------- Drag and drop ---------- */
+
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: var(--step-4);
+  font-weight: 900;
+  font-style: italic;
+  font-variation-settings: "wdth" 125;
+  color: var(--ink);
+  background: rgba(244, 196, 48, 0.94);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-out;
+}
+body.dragging .drop-overlay { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cartridge, .cartridge.inserting, .drop-overlay { transition: none; }
+  .cartridge:hover, .cartridge:active { transform: none; }
+}
