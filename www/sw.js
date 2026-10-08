@@ -1,6 +1,6 @@
 // Gameboy Zone service worker.
 // Bump APP_VERSION whenever you change any app file, so phones pick up the update.
-const APP_VERSION = "gbz-v7";
+const APP_VERSION = "gbz-v8";
 const SHELL_CACHE = `${APP_VERSION}-shell`;
 const ENGINE_CACHE = "gbz-engine-4.2.3"; // matches EJS_VERSION in app.js
 const FONT_CACHE = "gbz-fonts";
@@ -18,6 +18,7 @@ const SHELL_FILES = [
   "/icons/icon-maskable-512.png",
   "/icons/apple-touch-icon.png",
   "/icons/favicon-64.png",
+  "/icons/logo.webp",
 ];
 
 const KEEP = new Set([SHELL_CACHE, ENGINE_CACHE, FONT_CACHE]);

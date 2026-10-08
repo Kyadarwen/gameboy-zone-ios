@@ -42,6 +42,9 @@
 /* Brand */
 .home-brand { display: flex; align-items: flex-end; gap: 0.6rem; flex-wrap: wrap; }
 .home-brand .wordmark { margin: 0; }
+.wordmark-logo { line-height: 0; text-shadow: none; }
+.wordmark-logo img { display: block; width: clamp(9.5rem, 46vw, 13rem); height: auto; }
+@media (min-width: 46rem) { .wordmark-logo img { width: min(100%, 15rem); } }
 .home-version { font-size: 0.85rem; font-weight: 600; color: var(--h-muted); padding-bottom: 0.25rem; }
 
 /* Menu panel */
